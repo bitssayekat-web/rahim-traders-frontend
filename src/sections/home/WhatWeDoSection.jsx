@@ -13,6 +13,7 @@
  *    └───────┴───────────────────────┘
  *
  *  Tablet: 2 columns. Phone: single column. `id="services"` = nav target.
+ *  Hover (or keyboard focus): liquid rises inside the card with a moving wave.
  * ============================================================================
  */
 
@@ -105,7 +106,8 @@ export default function WhatWeDoSection() {
           </BentoCard>
 
           {/* ---- Design & Branding (CTA) ---- */}
-          <div className="flex flex-col items-start justify-between gap-6 rounded-3xl border border-sheet/26 bg-royal p-[26px] sm:flex-row sm:items-center md:col-span-2 lg:col-span-3 lg:h-[180px]">
+          <div className="group relative isolate flex flex-col items-start justify-between gap-6 overflow-hidden rounded-3xl border border-sheet/26 bg-royal p-[26px] sm:flex-row sm:items-center md:col-span-2 lg:col-span-3 lg:h-[180px]">
+            <LiquidFill tone="text-cobalt" />
             <div className="flex flex-col gap-2.5">
               <h3 className="text-h3 text-sheet">{design.title}</h3>
               <p className="max-w-[440px] text-sm leading-[1.5] text-sheet">{design.text}</p>
@@ -126,10 +128,41 @@ export default function WhatWeDoSection() {
 function BentoCard({ className = '', children }) {
   return (
     <article
-      className={`flex flex-col gap-3 overflow-hidden rounded-[26px] border border-sheet/26 bg-sheet/5 p-[26px] backdrop-blur-[2px] ${className}`}
+      className={`group relative isolate flex flex-col gap-3 overflow-hidden rounded-[26px] border border-sheet/26 bg-sheet/5 p-[26px] backdrop-blur-[2px] ${className}`}
     >
+      <LiquidFill tone="text-royal" />
       {children}
     </article>
+  )
+}
+
+/**
+ * Liquid that rises behind a card's content on hover. Two wave strips slide
+ * in opposite directions on top of the solid body, and only run while the
+ * card is active. The parent needs `group relative isolate overflow-hidden`.
+ */
+function LiquidFill({ tone }) {
+  return (
+    <span aria-hidden="true" className={`pointer-events-none absolute inset-0 -z-10 ${tone}`}>
+      <span className="absolute inset-0 translate-y-full transition-transform duration-1000 ease-[cubic-bezier(0.22,0.8,0.3,1)] group-focus-within:translate-y-0 group-hover:translate-y-0">
+        <LiquidWave className="opacity-50 [animation-direction:reverse] [animation-duration:5s]" />
+        <LiquidWave />
+        <span className="absolute inset-x-0 top-[35px] bottom-0 bg-current" />
+      </span>
+    </span>
+  )
+}
+
+/** Wave strip, twice the card's width: sliding it by half loops seamlessly. */
+function LiquidWave({ className = '' }) {
+  return (
+    <svg
+      viewBox="0 0 1200 36"
+      preserveAspectRatio="none"
+      className={`absolute top-0 left-0 h-9 w-[200%] max-w-none animate-liquid-wave [animation-play-state:paused] group-focus-within:[animation-play-state:running] group-hover:[animation-play-state:running] ${className}`}
+    >
+      <path d="M0 18Q150 0 300 18T600 18T900 18T1200 18V36H0Z" fill="currentColor" />
+    </svg>
   )
 }
 

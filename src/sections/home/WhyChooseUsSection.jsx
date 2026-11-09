@@ -13,6 +13,7 @@ import boxPreview from '../../assets/why/box-3d-preview.png'
 import gridLineH from '../../assets/why/grid-line-h.svg'
 import gridLineV from '../../assets/why/grid-line-v.svg'
 import Container from '../../components/ui/Container'
+import GlassIcon from '../../components/ui/GlassIcon'
 import SectionHeader from '../../components/ui/SectionHeader'
 import Swatch from '../../components/ui/Swatch'
 import { METRICS, PILLARS } from '../../data/content'
@@ -89,10 +90,8 @@ export default function WhyChooseUsSection() {
                 key={pillar.title}
                 className="flex flex-col gap-1.5 rounded-3xl border border-line bg-sheet p-[22px]"
               >
-                <span className={`flex size-12 items-center justify-center rounded-[14px] ${pillar.tone}`}>
-                  <img src={pillar.icon} alt="" className="size-[22px]" />
-                </span>
-                <span className="h-6 lg:h-10" aria-hidden="true" />
+                <GlassIcon name={pillar.icon} tone={pillar.tone} className="size-16" />
+                <span className="h-3 lg:h-6" aria-hidden="true" />
                 <h3 className="font-display text-[19px] leading-[1.3] font-semibold tracking-[-0.015em] text-ink">
                   {pillar.title}
                 </h3>

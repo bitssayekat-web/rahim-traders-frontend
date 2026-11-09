@@ -8,6 +8,7 @@
  */
 
 import Container from '../../components/ui/Container'
+import GlassIcon from '../../components/ui/GlassIcon'
 import { VALUES } from '../../data/content'
 
 export default function ValuesSection() {
@@ -29,9 +30,7 @@ export default function ValuesSection() {
                 .filter(Boolean)
                 .join(' ')}
             >
-              <span className={`flex size-[42px] shrink-0 items-center justify-center rounded-xl ${value.tone}`}>
-                <img src={value.icon} alt="" className="size-5" />
-              </span>
+              <GlassIcon name={value.icon} tone={value.tone} className="size-12 shrink-0" />
               <div className="flex flex-col gap-0.5">
                 <h3 className="text-[15.5px] leading-[1.3] font-semibold text-dark">{value.title}</h3>
                 <p className="text-sm leading-[1.5] text-mid">{value.text}</p>

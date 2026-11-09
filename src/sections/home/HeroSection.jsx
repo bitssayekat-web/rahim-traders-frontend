@@ -55,7 +55,7 @@ export default function HeroSection() {
         {/* ================= Hero Copy ================= */}
         <Container className="flex flex-col items-center gap-[22px] text-center">
           <p className="rounded-full border border-sheet bg-sheet px-4 py-[7px] text-[13px] leading-[1.4] text-mid shadow-[0_10px_30px_-12px_rgba(18,20,26,0.12)]">
-            Custom packaging &amp; printing · Islampur, Dhaka
+            Custom packaging &amp; printing · <strong className="font-bold">Islampur, Dhaka</strong>
           </p>
 
           <h1

@@ -8,16 +8,6 @@
  * ============================================================================
  */
 
-// ---- Icons ------------------------------------------------------------------
-import diamondIcon from '../assets/icons/diamond.svg'
-import clockIcon from '../assets/icons/clock.svg'
-import pencilIcon from '../assets/icons/pencil.svg'
-import headsetIcon from '../assets/icons/headset.svg'
-import printerIcon from '../assets/icons/printer.svg'
-import customIcon from '../assets/icons/custom.svg'
-import userIcon from '../assets/icons/user.svg'
-import truckIcon from '../assets/icons/truck.svg'
-
 // ---- Service photos (web-sized copies of /assets, named by service) ---------
 import packagingPhoto1 from '../assets/services/packaging-solutions-1.jpg'
 import packagingPhoto2 from '../assets/services/packaging-solutions-2.jpg'
@@ -68,10 +58,10 @@ export const CLIENT_LOGOMARKS = [
  *  VALUES strip
  * ------------------------------------------------------------------------- */
 export const VALUES = [
-  { title: 'Premium Quality', text: 'Made to impress', icon: diamondIcon, tone: 'bg-cyan-deep' },
-  { title: 'Reliable Turnaround', text: 'Planned with care', icon: clockIcon, tone: 'bg-magenta-deep' },
-  { title: 'Custom Solutions', text: 'Built for your needs', icon: pencilIcon, tone: 'bg-sun-deep' },
-  { title: 'Helpful Support', text: 'From idea to delivery', icon: headsetIcon, tone: 'bg-ink' },
+  { title: 'Premium Quality', text: 'Made to impress', icon: 'premium', tone: 'cyan' },
+  { title: 'Reliable Turnaround', text: 'Planned with care', icon: 'clock', tone: 'magenta' },
+  { title: 'Custom Solutions', text: 'Built for your needs', icon: 'pencil', tone: 'amber' },
+  { title: 'Helpful Support', text: 'From idea to delivery', icon: 'support', tone: 'violet' },
 ]
 
 /* ----------------------------------------------------------------------------
@@ -138,10 +128,10 @@ export const METRICS = [
 ]
 
 export const PILLARS = [
-  { title: 'Modern Equipment', text: 'Up-to-date printing machines.', icon: printerIcon, tone: 'bg-cyan-deep' },
-  { title: 'Custom Solutions', text: 'Sizes, materials and finishes to suit you.', icon: customIcon, tone: 'bg-magenta-deep' },
-  { title: 'Skilled Professionals', text: 'An experienced print and finishing team.', icon: userIcon, tone: 'bg-sun-deep' },
-  { title: 'On-Time Delivery', text: 'Timelines agreed before we print.', icon: truckIcon, tone: 'bg-ink' },
+  { title: 'Modern Equipment', text: 'Up-to-date printing machines.', icon: 'printer', tone: 'cyan' },
+  { title: 'Custom Solutions', text: 'Sizes, materials and finishes to suit you.', icon: 'custom', tone: 'magenta' },
+  { title: 'Skilled Professionals', text: 'An experienced print and finishing team.', icon: 'person', tone: 'amber' },
+  { title: 'On-Time Delivery', text: 'Timelines agreed before we print.', icon: 'truck', tone: 'violet' },
 ]
 
 /* ----------------------------------------------------------------------------

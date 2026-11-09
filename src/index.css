@@ -65,9 +65,29 @@
   /* ---- Motion ------------------------------------------------------------- */
   --animate-wheel: wheel-spin 90s linear infinite;
   --animate-marquee: marquee 40s linear infinite;
+  --animate-liquid-wave: liquid-wave 3s linear infinite;
+  --animate-ring-pulse: ring-pulse 4s ease-in-out infinite;
   --animate-aurora-a: aurora-a 18s ease-in-out infinite alternate;
   --animate-aurora-b: aurora-b 23s ease-in-out infinite alternate;
   --animate-aurora-c: aurora-c 15s ease-in-out infinite alternate;
+
+  @keyframes liquid-wave {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @keyframes ring-pulse {
+    0%,
+    100% {
+      opacity: 0.4;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.06);
+    }
+  }
 
   @keyframes aurora-a {
     to {

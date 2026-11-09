@@ -40,21 +40,22 @@ export default function HowToOrderSection() {
 
           {/* ================= Actions + rings ================= */}
           <div className="relative flex shrink-0 flex-col gap-4">
-            {RING_DIAMETERS.map((diameter) => (
+            {RING_DIAMETERS.map((diameter, index) => (
               <span
                 key={diameter}
                 aria-hidden="true"
                 // The widest rings would cross the copy once the panel stacks
-                className={`absolute top-1/2 left-1/2 -translate-1/2 rounded-full border border-sheet/25 ${
+                className={`absolute top-1/2 left-1/2 -translate-1/2 animate-ring-pulse rounded-full border border-sheet/60 opacity-40 ${
                   diameter > 324 ? 'max-lg:hidden' : ''
                 }`}
-                style={{ width: diameter, height: diameter }}
+                // Stagger inner → outer so the pulse travels away from the buttons
+                style={{ width: diameter, height: diameter, animationDelay: `${index * 0.45}s` }}
               />
             ))}
 
             <div className="relative flex flex-wrap gap-2.5">
               <WhatsAppButton />
-              <Button to={`mailto:${email}`} variant="ghost">
+              <Button to={`mailto:${email}`} variant="white">
                 Email
               </Button>
             </div>

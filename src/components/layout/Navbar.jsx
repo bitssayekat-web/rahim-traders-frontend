@@ -35,7 +35,7 @@ export default function Navbar() {
   }, [isOpen])
 
   return (
-    <nav aria-label="Main" className="relative border-b border-line bg-paper py-4">
+    <nav aria-label="Main" className="relative bg-paper py-4">
       <Container className="flex items-center justify-between gap-6">
         {/* ---- Brand ---- */}
         <Link to="/" aria-label="Rahim Traders — home" className="shrink-0">

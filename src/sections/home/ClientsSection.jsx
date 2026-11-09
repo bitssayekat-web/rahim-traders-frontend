@@ -22,14 +22,16 @@ export default function ClientsSection() {
       </h2>
 
       <div className="w-full overflow-hidden [mask-image:linear-gradient(90deg,transparent,#000_10%,#000_90%,transparent)]">
-        <ul className="flex w-max animate-marquee gap-6 hover:[animation-play-state:paused]">
+        <ul className="flex w-max animate-marquee hover:[animation-play-state:paused]">
           {loop.map((mark, index) => (
             <li
               key={index}
               aria-hidden={index >= CLIENT_LOGOMARKS.length}
-              className="relative h-10 w-[240px] shrink-0"
+              className="shrink-0 pr-14"
             >
-              <ClientLogo mark={mark} />
+              <div className="relative h-7 w-[168px]">
+                <ClientLogo mark={mark} />
+              </div>
             </li>
           ))}
         </ul>
@@ -38,7 +40,7 @@ export default function ClientsSection() {
   )
 }
 
-/** Brand mark + word mark, positioned with the Figma insets (240 × 40). */
+/** Brand mark + word mark, positioned with the Figma insets (6 : 1 lock-up). */
 function ClientLogo({ mark }) {
   return (
     <>
