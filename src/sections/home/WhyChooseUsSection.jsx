@@ -17,20 +17,63 @@ import GlassIcon from '../../components/ui/GlassIcon'
 import SectionHeader from '../../components/ui/SectionHeader'
 import Swatch from '../../components/ui/Swatch'
 import { METRICS, PILLARS } from '../../data/content'
+import { useScrollMotion } from '../../hooks/useScrollMotion'
+import { countUp } from '../../motion/effects'
+import { gsap } from '../../motion/gsap'
 
 /* Blueprint grid: 13 vertical lines every 8.108%, 8 horizontal every 12.903% */
 const GRID_V = Array.from({ length: 13 }, (_, i) => i * 8.108)
 const GRID_H = Array.from({ length: 8 }, (_, i) => i * 12.903)
 
+const WHY_TITLE = 'Packaging that makes a first impression'
+
 export default function WhyChooseUsSection() {
+  const scope = useScrollMotion((_, section) => {
+    // ---- CMYK roller sweeps the headline, inking it from pale to dark ----
+    const title = section.querySelector('[data-ink-title]')
+    gsap.set('[data-ink-ghost]', { opacity: 1 })
+    gsap
+      .timeline({
+        defaults: { ease: 'none', duration: 1 },
+        scrollTrigger: {
+          trigger: title,
+          start: 'top 82%',
+          end: 'top 38%',
+          scrub: 0.5,
+          invalidateOnRefresh: true,
+        },
+      })
+      .fromTo(
+        '[data-ink]',
+        { clipPath: 'inset(-15% 100% -20% 0%)' },
+        { clipPath: 'inset(-15% 0% -20% 0%)' },
+        0,
+      )
+      .fromTo('[data-roller]', { x: 0 }, { x: () => title.offsetWidth }, 0)
+      .fromTo('[data-roller]', { opacity: 0 }, { opacity: 1, duration: 0.06 }, 0)
+      .to('[data-roller]', { opacity: 0, duration: 0.06 }, 0.94)
+
+    // ---- Stats count up from zero, once ----
+    const stopCounters = gsap.utils.toArray('[data-count]').map((element) => countUp(element))
+
+    // ---- 3D preview card eases up to full size with the scroll ----
+    gsap.from('[data-preview]', {
+      scale: 0.92,
+      ease: 'none',
+      scrollTrigger: { trigger: '[data-preview]', start: 'top 92%', end: 'top 45%', scrub: true },
+    })
+
+    return () => stopCounters.forEach((stop) => stop())
+  })
+
   return (
-    <section id="why-us" aria-labelledby="why-title" className="bg-paper py-20 lg:py-28">
+    <section ref={scope} id="why-us" aria-labelledby="why-title" className="bg-paper py-20 lg:py-28">
       <Container className="flex flex-col gap-8">
         <div className="pb-3">
           <SectionHeader
             id="why-title"
             eyebrow="Why choose us"
-            title="Packaging that makes a first impression"
+            title={<InkedTitle text={WHY_TITLE} />}
             intro="We print for small shops and established brands alike, with the same care on a short run as on a large order."
             titleWidth="lg:max-w-[620px]"
             introWidth="lg:max-w-[420px]"
@@ -46,7 +89,7 @@ export default function WhyChooseUsSection() {
                 index > 0 ? 'border-t border-lavender md:border-t-0 md:border-l' : ''
               }`}
             >
-              <dd className="order-1 font-display text-[56px] leading-none font-bold tracking-[-0.035em] text-sheet lg:text-[72px] xl:text-[88px]">
+              <dd data-count={metric.value} className="order-1 font-display text-[56px] leading-none font-bold tracking-[-0.035em] text-sheet lg:text-[72px] xl:text-[88px]">
                 {metric.value}
               </dd>
               <dt className="order-2 flex items-center gap-2.5 text-base leading-[1.55] text-line-2">
@@ -60,7 +103,7 @@ export default function WhyChooseUsSection() {
         {/* ================= Body ================= */}
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           {/* ---- 3D box preview card ---- */}
-          <figure className="relative aspect-[592/454] overflow-hidden rounded-3xl border border-line bg-cobalt">
+          <figure data-preview className="relative aspect-[592/454] overflow-hidden rounded-3xl border border-line bg-cobalt">
             {/* Blueprint grid lines */}
             <div className="absolute inset-0" aria-hidden="true">
               {GRID_V.map((left) => (
@@ -102,5 +145,27 @@ export default function WhyChooseUsSection() {
         </div>
       </Container>
     </section>
+  )
+}
+
+/**
+ * Headline with a pale "unprinted" copy behind it and a CMYK roller on top.
+ * Both extras start invisible, so without motion it's just the plain heading.
+ */
+function InkedTitle({ text }) {
+  return (
+    <span data-ink-title className="relative block">
+      <span data-ink-ghost aria-hidden="true" className="absolute inset-0 text-line-2 opacity-0">
+        {text}
+      </span>
+      <span data-ink className="relative block">
+        {text}
+      </span>
+      <span
+        data-roller
+        aria-hidden="true"
+        className="absolute -inset-y-2 left-0 w-1.5 rounded-full bg-[linear-gradient(180deg,var(--color-cyan)_0_25%,var(--color-magenta)_25%_50%,var(--color-sun)_50%_75%,var(--color-ink)_75%)] opacity-0 shadow-[0_0_24px_4px_rgba(18,163,214,0.35)]"
+      />
+    </span>
   )
 }

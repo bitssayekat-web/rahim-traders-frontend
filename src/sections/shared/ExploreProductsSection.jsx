@@ -17,11 +17,14 @@ import Container from '../../components/ui/Container'
 import FilterTabs from '../../components/ui/FilterTabs'
 import ProductGrid from '../../components/ui/ProductGrid'
 import { useCategories, useFeaturedProducts, useProducts } from '../../hooks/useProducts'
+import { useScrollMotion } from '../../hooks/useScrollMotion'
+import { liftIn } from '../../motion/effects'
 
 const HOME_GRID_LIMIT = 8
 
 export default function ExploreProductsSection({ variant = 'featured' }) {
   const isCatalogue = variant === 'catalogue'
+  const scope = useScrollMotion(() => liftIn('h2'))
 
   // ---- Active category lives in the URL (?category=…) -------------------
   const [searchParams, setSearchParams] = useSearchParams()
@@ -49,6 +52,7 @@ export default function ExploreProductsSection({ variant = 'featured' }) {
 
   return (
     <section
+      ref={scope}
       id="products"
       aria-labelledby="products-title"
       className={`bg-sheet pb-20 lg:pb-28 ${isCatalogue ? 'pt-10 lg:pt-16' : 'pt-20 lg:pt-28'}`}

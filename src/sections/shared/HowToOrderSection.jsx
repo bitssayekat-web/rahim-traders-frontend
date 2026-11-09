@@ -13,15 +13,18 @@ import Button from '../../components/ui/Button'
 import Container from '../../components/ui/Container'
 import WhatsAppButton from '../../components/ui/WhatsAppButton'
 import { SITE } from '../../config/site'
+import { useScrollMotion } from '../../hooks/useScrollMotion'
+import { liftIn } from '../../motion/effects'
 
 /** Ring diameters in px, all centred on the actions column. */
 const RING_DIAMETERS = [220, 324, 452, 614]
 
 export default function HowToOrderSection() {
   const { phoneDisplay, phoneE164, email } = SITE.contact
+  const scope = useScrollMotion(() => liftIn('h2'))
 
   return (
-    <section id="how-to-order" aria-labelledby="order-title" className="bg-paper py-20 lg:py-28">
+    <section ref={scope} id="how-to-order" aria-labelledby="order-title" className="bg-paper py-20 lg:py-28">
       <Container>
         <div className="flex flex-col gap-10 overflow-hidden rounded-[36px] bg-royal p-8 sm:p-12 lg:flex-row lg:items-center lg:justify-between lg:p-16">
           {/* ================= Text ================= */}

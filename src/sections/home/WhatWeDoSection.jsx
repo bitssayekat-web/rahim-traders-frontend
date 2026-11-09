@@ -23,17 +23,52 @@ import SectionHeader from '../../components/ui/SectionHeader'
 import Swatch from '../../components/ui/Swatch'
 import WhatsAppButton from '../../components/ui/WhatsAppButton'
 import { SERVICES } from '../../data/content'
+import { useScrollMotion } from '../../hooks/useScrollMotion'
+import { liftIn } from '../../motion/effects'
+import { gsap } from '../../motion/gsap'
 import { buildWhatsAppLink } from '../../utils/whatsapp'
 
 const DESIGN_BRIEF_LINK = buildWhatsAppLink(
   "Hi Rahim Traders, I don't have artwork yet — can you help me design it?",
 )
 
+/** Where each bento card starts before settling into the grid (desktop). */
+const SCATTER = [
+  { x: -70, y: 90, rotation: -3 },
+  { x: 70, y: 60, rotation: 3 },
+  { x: 40, y: 110, rotation: -2 },
+  { x: 90, y: 130, rotation: 4 },
+  { x: -60, y: 120, rotation: 2 },
+  { x: 60, y: 150, rotation: -2 },
+]
+
 export default function WhatWeDoSection() {
   const { packaging, garment, commercial, uvDtf, laser, design } = SERVICES
 
+  const scope = useScrollMotion(({ desktop }) => {
+    liftIn('h2')
+
+    if (!desktop) {
+      liftIn('[data-bento]', { y: 32 })
+      return
+    }
+
+    const timeline = gsap.timeline({
+      defaults: { ease: 'power2.inOut', duration: 1 },
+      scrollTrigger: { trigger: '[data-bento-grid]', start: 'top 88%', end: 'top 35%', scrub: 0.6 },
+    })
+    gsap.utils.toArray('[data-bento]').forEach((card, index) => {
+      timeline.from(card, { ...SCATTER[index], scale: 0.94 }, 0)
+    })
+  })
+
   return (
-    <section id="services" aria-labelledby="services-title" className="bg-navy py-20 lg:py-28">
+    <section
+      ref={scope}
+      id="services"
+      aria-labelledby="services-title"
+      className="overflow-x-clip bg-navy py-20 lg:py-28"
+    >
       <Container className="flex flex-col gap-10">
         <SectionHeader
           id="services-title"
@@ -44,7 +79,7 @@ export default function WhatWeDoSection() {
         />
 
         {/* ================= Bento ================= */}
-        <div className="grid grid-cols-1 gap-3.5 md:grid-cols-2 lg:grid-cols-4">
+        <div data-bento-grid className="grid grid-cols-1 gap-3.5 md:grid-cols-2 lg:grid-cols-4">
           {/* ---- Packaging Solutions (large) ---- */}
           <BentoCard className="lg:col-span-2 lg:row-span-2 lg:h-[474px]">
             <CardHeading {...packaging} textWidth="max-w-[420px]" />
@@ -106,7 +141,7 @@ export default function WhatWeDoSection() {
           </BentoCard>
 
           {/* ---- Design & Branding (CTA) ---- */}
-          <div className="group relative isolate flex flex-col items-start justify-between gap-6 overflow-hidden rounded-3xl border border-sheet/26 bg-royal p-[26px] sm:flex-row sm:items-center md:col-span-2 lg:col-span-3 lg:h-[180px]">
+          <div data-bento className="group relative isolate flex flex-col items-start justify-between gap-6 overflow-hidden rounded-3xl border border-sheet/26 bg-royal p-[26px] sm:flex-row sm:items-center md:col-span-2 lg:col-span-3 lg:h-[180px]">
             <LiquidFill tone="text-cobalt" />
             <div className="flex flex-col gap-2.5">
               <h3 className="text-h3 text-sheet">{design.title}</h3>
@@ -128,6 +163,7 @@ export default function WhatWeDoSection() {
 function BentoCard({ className = '', children }) {
   return (
     <article
+      data-bento
       className={`group relative isolate flex flex-col gap-3 overflow-hidden rounded-[26px] border border-sheet/26 bg-sheet/5 p-[26px] backdrop-blur-[2px] ${className}`}
     >
       <LiquidFill tone="text-royal" />

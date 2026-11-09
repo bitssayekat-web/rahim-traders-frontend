@@ -16,7 +16,7 @@ export default function ClientsSection() {
   const loop = [...CLIENT_LOGOMARKS, ...CLIENT_LOGOMARKS]
 
   return (
-    <section aria-labelledby="clients-title" className="flex flex-col items-center gap-[22px] bg-sheet py-16">
+    <section aria-labelledby="clients-title" className="relative z-10 flex flex-col items-center gap-[22px] bg-sheet py-16">
       <h2 id="clients-title" className="text-eyebrow text-ink-3">
         Brands we&apos;ve printed for
       </h2>

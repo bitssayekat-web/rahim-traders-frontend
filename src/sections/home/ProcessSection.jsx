@@ -9,6 +9,8 @@
  *    1. chat bubbles arrive in turn      3. scan line sweeps the press sheet
  *    2. sketch → visual wipe + handle    4. boxes drop onto the stack + QC pop
  *  Keyframes live in index.css; all loops stop under prefers-reduced-motion.
+ *  Tall desktop screens: the section pins and the cards scroll sideways, with
+ *  each illustration driven by scroll position instead of its loop.
  *  Tablet/phone: one card per row. `id="process"` = nav target.
  * ============================================================================
  */
@@ -27,20 +29,86 @@ import Container from '../../components/ui/Container'
 import ImageSlot from '../../components/ui/ImageSlot'
 import ScaledStage from '../../components/ui/ScaledStage'
 import { PROCESS_STEPS } from '../../data/content'
+import { useScrollMotion } from '../../hooks/useScrollMotion'
+import { liftIn } from '../../motion/effects'
+import { gsap } from '../../motion/gsap'
 
 const TOTAL_STEPS = PROCESS_STEPS.length
 
 /** Which illustration + grid span belongs to each step. */
 const STEP_LAYOUT = {
-  1: { span: 'lg:col-span-2', Panel: ChatPanel },
-  2: { span: '', Panel: VisualPanel },
-  3: { span: '', Panel: PressPanel },
-  4: { span: 'lg:col-span-2', Panel: PackingPanel },
+  1: { span: 'lg:col-span-2 track:w-[640px]', Panel: ChatPanel },
+  2: { span: 'track:w-[440px]', Panel: VisualPanel },
+  3: { span: 'track:w-[440px]', Panel: PressPanel },
+  4: { span: 'lg:col-span-2 track:w-[640px]', Panel: PackingPanel },
 }
 
 export default function ProcessSection() {
+  const scope = useScrollMotion(({ track }, section) => {
+    liftIn('h2')
+    if (!track) {
+      liftIn('[data-step]', { y: 32 })
+      return
+    }
+
+    const rail = section.querySelector('[data-rail]')
+
+    /** How far the rail travels so its end lines up with the content column. */
+    const distance = () => {
+      const column = rail.parentElement
+      const { paddingLeft, paddingRight } = getComputedStyle(column)
+      return rail.scrollWidth - (column.clientWidth - parseFloat(paddingLeft) - parseFloat(paddingRight))
+    }
+
+    // Scroll takes over from the looping CSS animations in this layout
+    gsap.set('[data-chat-you], [data-chat-reply], [data-sketch], [data-handle], [data-scan], .process-box, [data-qc]', {
+      animation: 'none',
+    })
+
+    gsap
+      .timeline({
+        defaults: { ease: 'none' },
+        scrollTrigger: {
+          trigger: section,
+          pin: true,
+          start: 'top top',
+          end: () => `+=${distance()}`,
+          scrub: 0.6,
+          invalidateOnRefresh: true,
+          anticipatePin: 1,
+        },
+      })
+      .to(rail, { x: () => -distance(), duration: 1 }, 0)
+      .fromTo('[data-chat-reply]', { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.1 }, 0.02)
+      .fromTo(
+        '[data-sketch]',
+        { clipPath: 'inset(0% 75% 0% 0%)' },
+        { clipPath: 'inset(0% 15% 0% 0%)', duration: 0.4 },
+        0.1,
+      )
+      .fromTo('[data-handle]', { left: '25%' }, { left: '85%', duration: 0.4 }, 0.1)
+      .fromTo('[data-scan]', { top: '12%' }, { top: '82%', duration: 0.35 }, 0.35)
+      .fromTo(
+        '.process-box',
+        { autoAlpha: 0, y: -28 },
+        { autoAlpha: 1, y: 0, duration: 0.12, stagger: 0.07 },
+        0.62,
+      )
+      .fromTo(
+        '[data-qc]',
+        { autoAlpha: 0, scale: 0.6 },
+        { autoAlpha: 1, scale: 1, duration: 0.08, ease: 'back.out(2)' },
+        0.9,
+      )
+  })
+
   return (
-    <section id="process" aria-labelledby="process-title" className="bg-navy py-20 lg:py-28">
+    <section
+      ref={scope}
+      id="process"
+      aria-labelledby="process-title"
+      className="bg-navy py-20 lg:py-28 track:flex track:h-screen track:flex-col track:justify-center track:overflow-hidden track:py-0"
+    >
       <Container className="flex flex-col gap-10">
         {/* ================= Header ================= */}
         <header className="flex flex-col gap-3.5">
@@ -57,13 +125,14 @@ export default function ProcessSection() {
         </header>
 
         {/* ================= Steps ================= */}
-        <ol className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+        <ol data-rail className="grid grid-cols-1 gap-4 lg:grid-cols-3 track:flex track:w-max">
           {PROCESS_STEPS.map(({ step, title, text }) => {
             const { span, Panel } = STEP_LAYOUT[step]
             return (
               <li
                 key={step}
-                className={`flex flex-col gap-3 rounded-[26px] border border-sheet/26 bg-sheet/5 p-[26px] backdrop-blur-[2px] lg:min-h-[422px] ${span}`}
+                data-step
+                className={`flex flex-col gap-3 track:shrink-0 rounded-[26px] border border-sheet/26 bg-sheet/5 p-[26px] backdrop-blur-[2px] lg:min-h-[422px] ${span}`}
               >
                 <div className="flex items-center justify-between gap-4">
                   <h3 className="text-h3 text-sheet">
@@ -108,7 +177,7 @@ function ProgressDiamonds({ current }) {
 function ChatPanel() {
   return (
     <div className="flex w-full max-w-[440px] flex-col gap-3 p-4" aria-hidden="true">
-      <div className="flex max-w-[328px] animate-chat-you flex-col gap-[3px] self-start rounded-t-2xl rounded-br-2xl rounded-bl-[4px] bg-sheet px-3.5 py-3">
+      <div data-chat-you className="flex max-w-[328px] animate-chat-you flex-col gap-[3px] self-start rounded-t-2xl rounded-br-2xl rounded-bl-[4px] bg-sheet px-3.5 py-3">
         <span className="text-[13px] leading-[1.4] text-ink-3">YOU</span>
         <p className="text-sm leading-[1.5] text-ink">
           Hi, we need printed shopping bags with our logo. Here&apos;s the artwork.
@@ -119,7 +188,7 @@ function ChatPanel() {
         </span>
       </div>
 
-      <div className="flex max-w-[328px] animate-chat-us flex-col gap-[3px] self-start rounded-t-2xl rounded-br-[4px] rounded-bl-2xl bg-whatsapp px-3.5 py-3 text-sheet">
+      <div data-chat-reply className="flex max-w-[328px] animate-chat-us flex-col gap-[3px] self-start rounded-t-2xl rounded-br-[4px] rounded-bl-2xl bg-whatsapp px-3.5 py-3 text-sheet">
         <span className="text-[13px] leading-[1.4]">RAHIM TRADERS</span>
         <p className="text-sm leading-[1.5]">Got it. Which size and quantity do you need?</p>
       </div>
@@ -143,10 +212,11 @@ function VisualPanel() {
         <img
           src={poloBox}
           alt=""
+          data-sketch
           className="absolute inset-0 size-full animate-sketch-wipe object-cover [clip-path:inset(0_50%_0_0)] [filter:grayscale(1)_contrast(1.6)_brightness(1.15)]"
         />
         {/* Handle: rest position 50%, animated with the wipe */}
-        <span className="absolute inset-y-0 left-1/2 w-0.5 animate-sketch-handle bg-magenta">
+        <span data-handle className="absolute inset-y-0 left-1/2 w-0.5 animate-sketch-handle bg-magenta">
           <span className="absolute top-1.5 -left-[7px] h-3 w-4 rounded border-2 border-magenta bg-night" />
           <span className="absolute bottom-1.5 -left-[7px] h-3 w-4 rounded border-2 border-magenta bg-night" />
         </span>
@@ -170,7 +240,7 @@ function PressPanel() {
         <img src={cmykBar} alt="" className="h-2 w-[200px] max-w-none" />
       </div>
       {/* Scanning laser — wider than the sheet, glowing cyan (rest: mid-sheet) */}
-      <span className="absolute top-[47%] -left-5 h-0.5 w-[264px] animate-press-scan bg-cyan shadow-[0_0_18px_0_rgba(18,163,214,0.9)]" />
+      <span data-scan className="absolute top-[47%] -left-5 h-0.5 w-[264px] animate-press-scan bg-cyan shadow-[0_0_18px_0_rgba(18,163,214,0.9)]" />
     </div>
   )
 }
@@ -193,11 +263,11 @@ function PackingPanel() {
             key={src}
             src={src}
             alt=""
-            className={`absolute h-[150px] w-[225px] animate-stack-drop rounded-xl border-3 border-night shadow-[0_20px_30px_-16px_rgba(0,0,0,0.5)] ${position}`}
+            className={`process-box absolute h-[150px] w-[225px] animate-stack-drop rounded-xl border-3 border-night shadow-[0_20px_30px_-16px_rgba(0,0,0,0.5)] ${position}`}
             style={{ animationDelay: delay }}
           />
         ))}
-        <span className="absolute top-[178px] left-[320px] flex origin-left animate-qc-pop items-center gap-2 rounded-full bg-sheet px-3 py-[7px]">
+        <span data-qc className="absolute top-[178px] left-[320px] flex origin-left animate-qc-pop items-center gap-2 rounded-full bg-sheet px-3 py-[7px]">
           <img src={checkIcon} alt="" className="size-4" />
           <span className="text-[13px] leading-[1.4] font-semibold whitespace-nowrap text-whatsapp-ink">
             Quality checked

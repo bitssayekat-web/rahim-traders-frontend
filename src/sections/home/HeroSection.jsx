@@ -21,6 +21,8 @@ import ImageSlot from '../../components/ui/ImageSlot'
 import ScaledStage from '../../components/ui/ScaledStage'
 import WhatsAppButton from '../../components/ui/WhatsAppButton'
 import { HERO_WHEEL_ITEMS } from '../../data/content'
+import { useScrollMotion } from '../../hooks/useScrollMotion'
+import { gsap } from '../../motion/gsap'
 
 /* ---- Wheel geometry (px, measured on the 1440 × 450 Figma artboard) ---- */
 const STAGE = { width: 1440, height: 450 }
@@ -42,9 +44,20 @@ const AURORA_FIELDS = [
 ]
 
 export default function HeroSection() {
+  // Panel eases back as you scroll, letting the next section rise over it
+  const scope = useScrollMotion((_, section) => {
+    gsap.to('[data-hero-panel]', {
+      scale: 0.94,
+      y: 60,
+      transformOrigin: '50% 100%',
+      ease: 'none',
+      scrollTrigger: { trigger: section, start: 'top top', end: 'bottom top', scrub: true },
+    })
+  })
+
   return (
-    <section aria-labelledby="hero-title" className="bg-sheet p-2 sm:p-3">
-      <div className="relative isolate flex flex-col items-center gap-10 overflow-hidden rounded-[28px] bg-[linear-gradient(180deg,var(--color-aurora-base)_0%,var(--color-aurora-base)_45%,var(--color-aurora-sky)_72%,var(--color-aurora-teal)_100%)] pt-12 sm:rounded-[40px] sm:pt-[72px]">
+    <section ref={scope} aria-labelledby="hero-title" className="bg-sheet p-2 sm:p-3">
+      <div data-hero-panel className="relative isolate flex flex-col items-center gap-10 overflow-hidden rounded-[28px] bg-[linear-gradient(180deg,var(--color-aurora-base)_0%,var(--color-aurora-base)_45%,var(--color-aurora-sky)_72%,var(--color-aurora-teal)_100%)] pt-12 sm:rounded-[40px] sm:pt-[72px]">
         {/* ================= Aurora background ================= */}
         <div className="absolute inset-0 -z-10" aria-hidden="true">
           {AURORA_FIELDS.map((field) => (

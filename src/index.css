@@ -9,6 +9,10 @@
 
 @import 'tailwindcss';
 
+/* Sideways process section: desktop, tall enough to pin, motion allowed.
+   Keep in sync with MEDIA.track in src/motion/gsap.js. */
+@custom-variant track (@media (min-width: 1024px) and (min-height: 720px) and (prefers-reduced-motion: no-preference));
+
 @theme {
   /* ---- Typography --------------------------------------------------------- */
   --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
@@ -180,8 +184,12 @@
    Base layer
    -------------------------------------------------------------------------- */
 @layer base {
-  html {
+  /* Lenis handles smooth scrolling when it's running */
+  html:not(.lenis) {
     scroll-behavior: smooth;
+  }
+
+  html {
     /* Small breathing room above sections reached via #anchors */
     scroll-padding-top: 16px;
   }

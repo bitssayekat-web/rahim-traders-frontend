@@ -10,11 +10,14 @@
 
 import { useEffect } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
+import { getLenis, refreshTriggers, startSmoothScroll, watchPageHeight } from '../../motion/smoothScroll'
 import Footer from './Footer'
 import Navbar from './Navbar'
 import UtilityBar from './UtilityBar'
 
 export default function SiteLayout() {
+  useEffect(startSmoothScroll, [])
+  useEffect(watchPageHeight, [])
   useScrollManager()
 
   return (
@@ -48,13 +51,18 @@ function useScrollManager() {
   const { pathname, hash } = useLocation()
 
   useEffect(() => {
-    if (hash) {
-      const target = document.getElementById(hash.slice(1))
-      if (target) {
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' })
-        return
-      }
+    refreshTriggers()
+
+    const lenis = getLenis()
+    const target = hash ? document.getElementById(hash.slice(1)) : null
+
+    if (target) {
+      if (lenis) lenis.scrollTo(target, { offset: -16 })
+      else target.scrollIntoView({ block: 'start' })
+    } else if (lenis) {
+      lenis.scrollTo(0, { immediate: true })
+    } else {
+      window.scrollTo({ top: 0 })
     }
-    window.scrollTo({ top: 0 })
   }, [pathname, hash])
 }

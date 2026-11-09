@@ -8,6 +8,8 @@
  * ============================================================================
  */
 
+import { useScrollMotion } from '../../hooks/useScrollMotion'
+import { gsap, ScrollTrigger } from '../../motion/gsap'
 import ProductCard, { ProductCardSkeleton } from './ProductCard'
 
 export default function ProductGrid({
@@ -17,6 +19,20 @@ export default function ProductGrid({
   skeletonCount = 8,
   className = 'gap-x-7 gap-y-12',
 }) {
+  // Cards rise and ease up to full size in small groups as they enter
+  const scope = useScrollMotion(() => {
+    if (loading || !products?.length) return
+
+    const cards = gsap.utils.toArray('[data-product]')
+    gsap.set(cards, { y: 36, scale: 0.96, autoAlpha: 0 })
+    ScrollTrigger.batch(cards, {
+      start: 'top 94%',
+      once: true,
+      onEnter: (group) =>
+        gsap.to(group, { y: 0, scale: 1, autoAlpha: 1, duration: 0.9, ease: 'power3.out', stagger: 0.08 }),
+    })
+  }, [products, loading])
+
   const gridClasses = `grid grid-cols-1 min-[480px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ${className}`
 
   if (error) {
@@ -42,9 +58,9 @@ export default function ProductGrid({
   }
 
   return (
-    <ul className={gridClasses}>
+    <ul ref={scope} className={gridClasses}>
       {products.map((product) => (
-        <li key={product.id}>
+        <li key={product.id} data-product>
           <ProductCard product={product} />
         </li>
       ))}

@@ -18,6 +18,8 @@ import instagramIcon from '../../assets/icons/instagram.svg'
 import whatsappIcon from '../../assets/icons/whatsapp.svg'
 import { SITE } from '../../config/site'
 import { FOOTER_PRODUCT_LINKS, FOOTER_QUICK_LINKS } from '../../data/content'
+import { useScrollMotion } from '../../hooks/useScrollMotion'
+import { drawLines, liftIn } from '../../motion/effects'
 import { DEFAULT_QUOTE_LINK } from '../../utils/whatsapp'
 import Container from '../ui/Container'
 import CopyButton from '../ui/CopyButton'
@@ -35,8 +37,14 @@ const CURRENT_YEAR = new Date().getFullYear()
 export default function Footer() {
   const { phoneDisplay, email, addressFull } = SITE.contact
 
+  // Columns arrive one after another; the bottom rule draws across
+  const scope = useScrollMotion(() => {
+    liftIn('[data-footer-col]', { y: 32 })
+    drawLines('[data-rule-x]')
+  })
+
   return (
-    <footer id="contact" className="relative isolate overflow-hidden bg-footer pt-[72px] pb-7">
+    <footer ref={scope} id="contact" className="relative isolate overflow-hidden bg-footer pt-[72px] pb-7">
       {/* ---- Background photo + overlay ---- */}
       <img
         src={pressPhoto}
@@ -49,7 +57,7 @@ export default function Footer() {
         {/* ================= Columns ================= */}
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-[420px_170px_260px_auto] lg:gap-12">
           {/* ---- Brand + contact ---- */}
-          <div className="flex flex-col gap-4 sm:col-span-2 lg:col-span-1">
+          <div data-footer-col className="flex flex-col gap-4 sm:col-span-2 lg:col-span-1">
             <img src={logoWhite} alt="Rahim Traders" className="h-14 w-auto self-start" />
             <address className="max-w-[320px] text-sm leading-[1.5] text-sheet not-italic">
               {addressFull}
@@ -64,7 +72,7 @@ export default function Footer() {
           <LinkColumn title="Our products" links={FOOTER_PRODUCT_LINKS} />
 
           {/* ---- Social ---- */}
-          <div className="flex flex-col gap-3">
+          <div data-footer-col className="flex flex-col gap-3">
             <h2 className="text-eyebrow text-ink-3">Follow us</h2>
             <ul className="flex gap-2.5">
               {SOCIALS.map(({ label, href, icon }) => (
@@ -83,7 +91,8 @@ export default function Footer() {
         </div>
 
         {/* ================= Bottom bar ================= */}
-        <div className="flex flex-col gap-2 border-t border-sheet/10 pt-[22px] text-[13px] leading-[1.4] text-ink-3 sm:flex-row sm:justify-between">
+        <div className="relative flex flex-col gap-2 pt-[22px] text-[13px] leading-[1.4] text-ink-3 sm:flex-row sm:justify-between">
+          <span data-rule-x className="absolute inset-x-0 top-0 h-px bg-sheet/10" />
           <p>© {CURRENT_YEAR} Rahim Traders</p>
           <p>{SITE.tagline}</p>
         </div>
@@ -113,7 +122,7 @@ function ContactCard({ icon, label, value }) {
 /** Eyebrow heading + vertical list of links. */
 function LinkColumn({ title, links }) {
   return (
-    <div className="flex flex-col gap-3">
+    <div data-footer-col className="flex flex-col gap-3">
       <h2 className="text-eyebrow text-mid">{title}</h2>
       <ul className="flex flex-col gap-3">
         {links.map((link) => (

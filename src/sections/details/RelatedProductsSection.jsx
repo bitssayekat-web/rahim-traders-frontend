@@ -8,14 +8,17 @@
 
 import ProductGrid from '../../components/ui/ProductGrid'
 import { useRelatedProducts } from '../../hooks/useProducts'
+import { useScrollMotion } from '../../hooks/useScrollMotion'
+import { liftIn } from '../../motion/effects'
 
 const RELATED_LIMIT = 4
 
 export default function RelatedProductsSection({ slug }) {
   const { data, loading, error } = useRelatedProducts(slug, RELATED_LIMIT)
+  const scope = useScrollMotion(() => liftIn('h2'))
 
   return (
-    <section aria-labelledby="related-title" className="bg-paper py-16">
+    <section ref={scope} aria-labelledby="related-title" className="bg-paper py-16">
       <div className="mx-auto flex max-w-[1188px] flex-col gap-8 px-4 sm:px-6 lg:px-10 xl:box-content xl:px-0">
         <h2
           id="related-title"
