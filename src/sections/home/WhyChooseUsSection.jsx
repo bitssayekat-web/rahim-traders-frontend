@@ -9,9 +9,9 @@
  * ============================================================================
  */
 
-import boxPreview from '../../assets/why/box-3d-preview.png'
 import gridLineH from '../../assets/why/grid-line-h.svg'
 import gridLineV from '../../assets/why/grid-line-v.svg'
+import DielineBox from '../../components/brand/DielineBox'
 import Container from '../../components/ui/Container'
 import GlassIcon from '../../components/ui/GlassIcon'
 import SectionHeader from '../../components/ui/SectionHeader'
@@ -25,7 +25,7 @@ import { gsap } from '../../motion/gsap'
 const GRID_V = Array.from({ length: 13 }, (_, i) => i * 8.108)
 const GRID_H = Array.from({ length: 8 }, (_, i) => i * 12.903)
 
-const WHY_TITLE = 'Packaging that makes a first impression'
+const WHY_TITLE = { lead: 'Packaging that makes a ', highlight: 'first impression' }
 
 export default function WhyChooseUsSection() {
   const scope = useScrollMotion((_, section) => {
@@ -56,13 +56,6 @@ export default function WhyChooseUsSection() {
     // ---- Stats count up from zero, once ----
     const stopCounters = gsap.utils.toArray('[data-count]').map((element) => countUp(element))
 
-    // ---- 3D preview card eases up to full size with the scroll ----
-    gsap.from('[data-preview]', {
-      scale: 0.92,
-      ease: 'none',
-      scrollTrigger: { trigger: '[data-preview]', start: 'top 92%', end: 'top 45%', scrub: true },
-    })
-
     return () => stopCounters.forEach((stop) => stop())
   })
 
@@ -73,7 +66,7 @@ export default function WhyChooseUsSection() {
           <SectionHeader
             id="why-title"
             eyebrow="Why choose us"
-            title={<InkedTitle text={WHY_TITLE} />}
+            title={<InkedTitle {...WHY_TITLE} />}
             intro="We print for small shops and established brands alike, with the same care on a short run as on a large order."
             titleWidth="lg:max-w-[620px]"
             introWidth="lg:max-w-[420px]"
@@ -103,7 +96,7 @@ export default function WhyChooseUsSection() {
         {/* ================= Body ================= */}
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           {/* ---- 3D box preview card ---- */}
-          <figure data-preview className="relative aspect-[592/454] overflow-hidden rounded-3xl border border-line bg-cobalt">
+          <figure className="@container relative aspect-[592/454] overflow-hidden rounded-3xl border border-line bg-cobalt">
             {/* Blueprint grid lines */}
             <div className="absolute inset-0" aria-hidden="true">
               {GRID_V.map((left) => (
@@ -114,12 +107,8 @@ export default function WhyChooseUsSection() {
               ))}
             </div>
 
-            {/* Mock-up image: 500 × 360 centred (+5px), scaled with the card */}
-            <img
-              src={boxPreview}
-              alt="3D preview of a Rahim Traders mailer box on its dieline"
-              className="absolute top-[calc(50%+1.1%)] left-1/2 w-[84.46%] -translate-x-1/2 -translate-y-1/2 rounded-2xl object-cover"
-            />
+            {/* Live press sheet that prints and folds into a box */}
+            <DielineBox />
 
             <figcaption className="absolute top-[17px] left-[19px] text-[11px] leading-[1.4] tracking-[0.08em] text-ink-3">
               DIELINE · 3D PREVIEW
@@ -150,16 +139,19 @@ export default function WhyChooseUsSection() {
 
 /**
  * Headline with a pale "unprinted" copy behind it and a CMYK roller on top.
+ * The roller inks the lead in black and the highlight in the brand blue.
  * Both extras start invisible, so without motion it's just the plain heading.
  */
-function InkedTitle({ text }) {
+function InkedTitle({ lead, highlight }) {
   return (
     <span data-ink-title className="relative block">
       <span data-ink-ghost aria-hidden="true" className="absolute inset-0 text-line-2 opacity-0">
-        {text}
+        {lead}
+        {highlight}
       </span>
       <span data-ink className="relative block">
-        {text}
+        {lead}
+        <span className="text-royal">{highlight}</span>
       </span>
       <span
         data-roller
