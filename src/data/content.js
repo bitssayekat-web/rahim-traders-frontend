@@ -123,7 +123,7 @@ export const SERVICES = {
   design: {
     title: 'Design & Branding',
     text: "No artwork yet? Share your idea and we'll turn it into a print-ready visual before production.",
-    cta: 'Start with your idea →',
+    cta: 'Start with your idea',
   },
 }
 

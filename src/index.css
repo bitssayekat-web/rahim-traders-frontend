@@ -22,6 +22,13 @@
   --color-azure: #005dfd; /* hero gradient start */
   --color-cobalt: #2f55e5; /* 3D preview card */
 
+  /* ---- Hero aurora background --------------------------------------------- */
+  --color-aurora-base: #3b74c2;
+  --color-aurora-deep: #2c62ae;
+  --color-aurora-sky: #6ea6ea;
+  --color-aurora-lilac: #b7a5f7;
+  --color-aurora-teal: #6fdae0;
+
   /* ---- Ink / text --------------------------------------------------------- */
   --color-dark: #060613; /* text-dark */
   --color-mid: #6a6a91; /* text-mid */
@@ -58,6 +65,27 @@
   /* ---- Motion ------------------------------------------------------------- */
   --animate-wheel: wheel-spin 90s linear infinite;
   --animate-marquee: marquee 40s linear infinite;
+  --animate-aurora-a: aurora-a 18s ease-in-out infinite alternate;
+  --animate-aurora-b: aurora-b 23s ease-in-out infinite alternate;
+  --animate-aurora-c: aurora-c 15s ease-in-out infinite alternate;
+
+  @keyframes aurora-a {
+    to {
+      transform: translate(14%, 10%) scale(1.2);
+    }
+  }
+
+  @keyframes aurora-b {
+    to {
+      transform: translate(-16%, 12%) scale(1.15);
+    }
+  }
+
+  @keyframes aurora-c {
+    to {
+      transform: translate(12%, -14%) scale(1.25);
+    }
+  }
 
   @keyframes wheel-spin {
     to {

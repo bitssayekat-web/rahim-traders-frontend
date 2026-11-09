@@ -12,10 +12,9 @@ import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import logo from '../../assets/brand/logo.svg'
 import { NAV_LINKS } from '../../config/site'
-import { DEFAULT_QUOTE_LINK } from '../../utils/whatsapp'
-import Button from '../ui/Button'
 import Container from '../ui/Container'
 import SmartLink from '../ui/SmartLink'
+import WhatsAppButton from '../ui/WhatsAppButton'
 
 export default function Navbar() {
   const location = useLocation()
@@ -59,9 +58,7 @@ export default function Navbar() {
 
         {/* Wrapper owns the visibility — Button sets its own `display` */}
         <div className="hidden lg:block">
-          <Button to={DEFAULT_QUOTE_LINK} variant="whatsapp" size="sm">
-            Get a quote on WhatsApp
-          </Button>
+          <WhatsAppButton size="sm" />
         </div>
 
         {/* ---- Mobile toggle ---- */}
@@ -96,9 +93,7 @@ export default function Navbar() {
               {link.label}
             </SmartLink>
           ))}
-          <Button to={DEFAULT_QUOTE_LINK} variant="whatsapp" className="mt-3 w-full">
-            Get a quote on WhatsApp
-          </Button>
+          <WhatsAppButton className="mt-3 w-full" />
         </Container>
       </div>
     </nav>

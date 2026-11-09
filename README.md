@@ -29,8 +29,9 @@ src/
 ├── components/
 │   ├── layout/      UtilityBar, Navbar, Footer, SiteLayout (page chrome)
 │   ├── ui/          Button, Container, FilterTabs, ProductCard, ProductGrid,
-│   │                ImageSlot, ScaledStage, SectionHeader, Swatch, CopyButton
-│   └── brand/       LogoStack, CtaBagIllustration (vector illustrations)
+│   │                ImageSlot, ScaledStage, SectionHeader, Swatch, CopyButton,
+│   │                WhatsAppButton (primary CTA)
+│   └── brand/       LogoStack (hero wheel brand lock-up)
 ├── sections/        One file per Figma section, grouped by page
 │   ├── home/        Hero, Clients, Values, WhatWeDo, WhyChooseUs, Process
 │   ├── shared/      ExploreProducts, HowToOrder (used on several pages)

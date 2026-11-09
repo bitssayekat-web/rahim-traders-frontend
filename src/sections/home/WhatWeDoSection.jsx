@@ -16,11 +16,11 @@
  * ============================================================================
  */
 
-import Button from '../../components/ui/Button'
 import Container from '../../components/ui/Container'
 import ImageSlot from '../../components/ui/ImageSlot'
 import SectionHeader from '../../components/ui/SectionHeader'
 import Swatch from '../../components/ui/Swatch'
+import WhatsAppButton from '../../components/ui/WhatsAppButton'
 import { SERVICES } from '../../data/content'
 import { buildWhatsAppLink } from '../../utils/whatsapp'
 
@@ -110,9 +110,7 @@ export default function WhatWeDoSection() {
               <h3 className="text-h3 text-sheet">{design.title}</h3>
               <p className="max-w-[440px] text-sm leading-[1.5] text-sheet">{design.text}</p>
             </div>
-            <Button to={DESIGN_BRIEF_LINK} variant="white">
-              {design.cta}
-            </Button>
+            <WhatsAppButton to={DESIGN_BRIEF_LINK}>{design.cta}</WhatsAppButton>
           </div>
         </div>
       </Container>
